@@ -26,6 +26,9 @@ public class MappingUtil {
         techmemeMap.put("elements", "events.rhov a");
         techmemeMap.put("eventName", "th");
         techmemeMap.put("eventDetails", "td");
+        techmemeMap.put("startDate", "1");
+        techmemeMap.put("location", "3");
+        techmemeMap.put("eventDetails", "td");
         return techmemeMap;
     }
 

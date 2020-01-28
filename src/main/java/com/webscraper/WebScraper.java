@@ -28,7 +28,7 @@ public class WebScraper {
         USER_AGENT_STRINGS.add("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:2.0a1pre) Gecko/2008060602 Minefield/4.0a1pre");
 
         URLS.add("https://www.computerworld.com/article/3313417/tech-event-calendar-2020-upcoming-shows-conferences-and-it-expos.html");
-        //URLS.add("https://www.techmeme.com/events");
+        URLS.add("https://www.techmeme.com/events");
     }
 
 
@@ -69,13 +69,39 @@ public class WebScraper {
     }
 
     private static void parseContent(String url, Document page) {
-        Map<String, String> contentMap = MappingUtil.getContentMapper(url);
-        final Elements elements = page.select(contentMap.get("elements"));
+        if (url.equals(URLS.get(0))) {
+            parseComputerworldData(url, page);
+        } else if (url.equals(URLS.get(1))) {
+            parseTechmemeData(url,page);
+        }
+    }
+
+    private static void parseTechmemeData(String url, Document page) {
+        //System.out.println(page.outerHtml());
+        Element element = page.getElementById("events");
+       // System.out.println(element.outerHtml());
+        Elements elements = element.select("div.rhov a");
+        elements.forEach(selectedElement -> {
+            System.out.println("Event Name :: " + selectedElement.select("div").get(1).text());
+            System.out.println("Event Date :: " + selectedElement.select("div").get(0).text());
+            System.out.println("Event Location :: " + selectedElement.select("div").get(2).text());
+            System.out.println("===================================================");
+        });
+    }
+
+    public static void parseComputerworldData(String url, Document page) {
+//        Map<String, String> contentMap = MappingUtil.getContentMapper(url);
+        Elements elements = page.select("table.tablesorter tbody tr");
         for (Element element : elements) {
-            System.out.println("Event Name :: " + element.select(contentMap.get("eventName")).text());
+            /*System.out.println("Event Name :: " + element.select(contentMap.get("eventName")).text());
             Elements dataElements = element.select(contentMap.get("eventDetails"));
             System.out.println("Event Date :: " + dataElements.get(Integer.parseInt(contentMap.get("startDate"))).text());
             System.out.println("Event Location :: " + dataElements.get(Integer.parseInt(contentMap.get("location"))).text());
+            System.out.println("===================================================");*/
+            System.out.println("Event Name :: " + element.select("th").text());
+            Elements dataElements = element.select("td");
+            System.out.println("Event Date :: " + dataElements.get(1).text());
+            System.out.println("Event Location :: " + dataElements.get(3).text());
             System.out.println("===================================================");
         }
     }
